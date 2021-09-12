@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           SearchBar(_searchMovies),
-          if(this._dataToDisplay.length == 0) ErrorMessage('No movies found') ,
+          if( this._dataToDisplay != null && this._dataToDisplay.length == 0) ErrorMessage('No movies found') ,
           this._dataToDisplay != null
               ? MovieList(
                   movies: this._dataToDisplay,
