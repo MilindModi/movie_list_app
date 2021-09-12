@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movie_list_app/component/error_message.dart';
+import 'package:movie_list_app/component/movie_list.dart';
+import 'package:movie_list_app/component/search_bar.dart';
 import 'package:movie_list_app/network/API.dart';
 import 'package:movie_list_app/network/movie.dart';
-import 'package:movie_list_app/util/movie_list.dart';
-import 'package:movie_list_app/util/search_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,21 +12,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   API api;
-  Movies data;
+  List<Movie> data;
+
+  List<Movie> _dataToDisplay;
 
   @override
   void initState() {
     super.initState();
     api = API();
     _fetchPopularMovies();
-  }
-
-  _fetchPopularMovies() async {
-    final movies = await api.fetchPopular();
-    print(movies);
-    setState(() {
-      data = movies;
-    });
   }
 
   @override
@@ -45,14 +40,39 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          SearchBar(),
-          this.data != null
+          SearchBar(_searchMovies),
+          if(this._dataToDisplay.length == 0) ErrorMessage('No movies found') ,
+          this._dataToDisplay != null
               ? MovieList(
-                  movies: this.data.items,
+                  movies: this._dataToDisplay,
                 )
               : CircularProgressIndicator(),
         ],
       ),
     );
+  }
+
+  _fetchPopularMovies() async {
+    final movies = await api.fetchPopular();
+    setState(() {
+      data = movies.items;
+      _dataToDisplay = data;
+    });
+  }
+
+  _searchMovies(String title) async {
+    if (title.isNotEmpty) {
+      setState(() {
+        _dataToDisplay = this
+            .data
+            .where((movie) =>
+                movie.title.toLowerCase().contains(title.toLowerCase()))
+            .toList();
+      });
+    } else {
+      setState(() {
+        _dataToDisplay = this.data;
+      });
+    }
   }
 }

@@ -38,15 +38,15 @@ class Movie {
 
   Movie(
       {this.id,
-        this.rank,
-        this.rankUpDown,
-        this.title,
-        this.fullTitle,
-        this.year,
-        this.image,
-        this.crew,
-        this.imDbRating,
-        this.imDbRatingCount});
+      this.rank,
+      this.rankUpDown,
+      this.title,
+      this.fullTitle,
+      this.year,
+      this.image,
+      this.crew,
+      this.imDbRating,
+      this.imDbRatingCount});
 
   Movie.fromJson(Map<String, dynamic> json) {
     id = json['id'];
