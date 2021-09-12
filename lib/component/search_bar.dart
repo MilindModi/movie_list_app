@@ -10,21 +10,34 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final _myController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextField(
+        controller: _myController,
+        autofocus: false,
         style: TextStyle(
           color: Colors.black,
           fontSize: 20,
         ),
         decoration: InputDecoration(
           hintText: 'Search for Movies',
-          suffixIcon: Icon(
-            Icons.search,
-            color: Colors.black,
-          ),
+          suffixIcon: _myController.text.isEmpty
+              ? Icon(
+                  Icons.search,
+                  color: Colors.black,
+                )
+              : IconButton(
+                  onPressed: () {
+                    _myController.clear();
+                    FocusScope.of(context).unfocus();
+                    widget.callback('');
+                  },
+                  icon: Icon(Icons.clear),
+                ),
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
